@@ -1,12 +1,10 @@
 import cv2
 import mediapipe as mp
 import time
-import pyttsx3  # 🔊 Voice engine
+import pyttsx3  
 
-# Initialize voice engine
 engine = pyttsx3.init()
 
-# MediaPipe Hands setup
 mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(
     max_num_hands=2,
@@ -15,15 +13,13 @@ hands = mp_hands.Hands(
 )
 mp_draw = mp.solutions.drawing_utils
 
-# Webcam
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
-# Input tracking
+
 input_sequence = ""
 last_input_time = 0
 cooldown = 1.5
 
-# Operator mapping for left hand
 operator_map = {
     1: '+',
     2: '-',
@@ -35,13 +31,13 @@ def count_fingers(hand_landmarks):
     tips = [4, 8, 12, 16, 20]
     fingers = []
 
-    # Thumb (based on x)
+  
     if hand_landmarks.landmark[tips[0]].x < hand_landmarks.landmark[tips[0] - 1].x:
         fingers.append(1)
     else:
         fingers.append(0)
 
-    # Other 4 fingers (based on y)
+   
     for i in range(1, 5):
         if hand_landmarks.landmark[tips[i]].y < hand_landmarks.landmark[tips[i] - 2].y:
             fingers.append(1)
@@ -81,7 +77,6 @@ while True:
                         engine.runAndWait()
                         last_input_time = time.time()
 
-    # Show input
     y = 40
     cv2.putText(frame, "Input:", (10, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     y += 40
